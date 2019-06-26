@@ -1,29 +1,50 @@
-/* NOTE: this Pipeline mainly aims at catching mistakes (wrongly formed Dockerfile, etc.)
- * This Pipeline is *not* used for actual image publishing.
- * This is currently handled through Automated Builds using standard Docker Hub feature
-*/
-pipeline {
-    agent { label 'linux' }
-
-    options {
-        timeout(time: 2, unit: 'MINUTES')
-        buildDiscarder(logRotator(daysToKeepStr: '10'))
-        timestamps()
-    }
-
-    triggers {
-        pollSCM('H/24 * * * *') // once a day in case some hooks are missed
-    }
-
-    stages {
-        stage('Build Docker Image') {
-            steps {
-                deleteDir()
-                checkout scm
-                sh 'make build'
+podTemplate(name: 'haimaxy-jnlp', cloud: 'kubernetes',
+  namespace: 'kube-ops', label: 'haimaxy-jnlp',
+  serviceAccount: 'jenkins2', containers: [
+  containerTemplate(
+      name: 'jnlp',
+      image: 'zhaoxy8/jenkins-slave-docker:3.5.3',
+      args: '${computer.jnlpmac} ${computer.name}',
+      ttyEnabled: true,
+      privileged: false,
+      alwaysPullImage: false)
+  ],
+){
+node('haimaxy-jnlp') {
+    stage('Prepare') {
+    	container('jnlp') {
+        echo "1.Prepare Stage"
+        checkout scm
+        script {
+            build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+            if (env.BRANCH_NAME != 'master') {
+                build_tag = "${env.BRANCH_NAME}-${build_tag}"
             }
         }
+      }  
+    }
+    stage('Test') {
+      echo "2.Test Stage"
+    }
+    stage('Build') {
+        echo "3.Build Docker Image Stage"
+        sh "docker build -t zhaoxy8/jenkins-slave-docker:${build_tag} ."
+    }
+    stage('Push') {
+        echo "4.Push Docker Image Stage"
+        withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+            sh "docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
+            sh "docker push zhaoxy8/jenkins-slave-docker:${build_tag}"
+        }
+    }
+    stage('Deploy') {
+        echo "5. Deploy Stage"
+        if (env.BRANCH_NAME == 'master') {
+            input "确认要部署线上环境吗？"
+        }
+        sh "sed -i 's/<BUILD_TAG>/${build_tag}/' k8s.yaml"
+        sh "sed -i 's/<BRANCH_NAME>/${env.BRANCH_NAME}/' k8s.yaml"
+        sh "kubectl apply -f k8s.yaml --record"
     }
 }
-
-// vim: ft=groovy
+}
