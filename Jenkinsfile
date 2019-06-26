@@ -3,7 +3,7 @@ podTemplate(name: 'haimaxy-jnlp', cloud: 'kubernetes',
   serviceAccount: 'jenkins2', containers: [
   containerTemplate(
       name: 'jnlp',
-      image: 'zhaoxy8/jenkins-slave-docker:3.5.3',
+      image: 'cnych/jenkins:jnlp',
       args: '${computer.jnlpmac} ${computer.name}',
       ttyEnabled: true,
       privileged: false,
