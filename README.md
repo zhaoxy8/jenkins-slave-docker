@@ -14,6 +14,7 @@ See [Jenkins Distributed builds](https://wiki.jenkins-ci.org/display/JENKINS/Dis
 - 使用BlueOcean的多分支部署，需要使用git的personel access token 获取Git repo 代码
 - git repo 代码克隆到本地磁盘上，创建了dev分支 推送到git repo 未成功
 - 要先在github UI 上创建dev 分支，然后在把本地dev分支推送到github的dev分支上
+-  test
 ## Running
 
 To run a Docker container
