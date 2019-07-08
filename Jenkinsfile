@@ -1,10 +1,11 @@
-podTemplate(name: 'xy.zhao-jnlp', cloud: 'kubernetes',
-  namespace: 'kube-ops', label: 'xy.zhao-jnlp',
+podTemplate(name: 'jenkins-jnlp', cloud: 'kubernetes',
+  namespace: 'kube-ops', label: 'jenkins-jnlp',
   serviceAccount: 'jenkins2', containers: [
   containerTemplate(
       name: 'xyjnlp',
       image: 'cnych/jenkins:jnlp',
-      args: '${computer.jnlpmac} ${computer.name}',
+      workspace: '/home/jenkins',
+      //args: '${computer.jnlpmac} ${computer.name}',
       ttyEnabled: true,
       privileged: false,
       alwaysPullImage: false)
@@ -14,7 +15,7 @@ podTemplate(name: 'xy.zhao-jnlp', cloud: 'kubernetes',
     hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube'),
   ]
 ){
-node('xy.zhao-jnlp') {
+node('jenkins-jnlp') {
     stage('Prepare') {
     	container('xyjnlp') {
         echo "1.Prepare Stage"
