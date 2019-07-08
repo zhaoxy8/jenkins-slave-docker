@@ -1,5 +1,5 @@
 podTemplate(name: 'xy1219.zhao-jnlp', cloud: 'kubernetes',
-  namespace: 'kube-ops', label: 'haimaxy-jnlp',
+  namespace: 'kube-ops', label: 'xy1219.zhao-jnlp',
   serviceAccount: 'jenkins2', containers: [
   containerTemplate(
       name: 'jnlp',
