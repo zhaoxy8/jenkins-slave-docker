@@ -4,20 +4,20 @@ podTemplate(name: 'slave-jnlp', cloud: 'kubernetes',
   containerTemplate(
       name: 'xyjnlp',
       image: 'zhaoxy8/jenkins-slave-docker:dev-ed14a9a',
-      args: '${computer.jnlpmac} ${computer.name}',
+      //args: '${computer.jnlpmac} ${computer.name}',
       ttyEnabled: true,
       privileged: false,
       alwaysPullImage: false)
   ],
   volumes: [ 
-    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]
 ){
 node('jenkins-jnlp') {
     stage('Prepare') {
         echo "1.Prepare Stage"
         checkout scm
-	sleep 300
+	//sleep 300
         script {
             build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
             if (env.BRANCH_NAME != 'master') {
