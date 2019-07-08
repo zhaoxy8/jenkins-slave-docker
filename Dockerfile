@@ -15,6 +15,23 @@ RUN apk -Uuv add groff less python py-pip
 RUN pip install awscli
 RUN apk --purge -v del py-pip
 RUN rm /var/cache/apk/*
+# Install nodejs
+RUN apk add nodejs
+
+# Install npm
+RUN apk add npm
+
+# Install yarn
+RUN apk add yarn
+
+# Install newman
+RUN npm install -g newman
+
+# Install jq
+RUN apk add jq
+
+# Set timezone to UTC by default
+RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 
 #######
 # Maven

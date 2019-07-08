@@ -1,18 +1,22 @@
-podTemplate(name: 'xy1219.zhao-jnlp', cloud: 'kubernetes',
-  namespace: 'kube-ops', label: 'xy1219.zhao-jnlp',
+podTemplate(name: 'slave-jnlp', cloud: 'kubernetes',
+  namespace: 'kube-ops', label: 'jenkins-jnlp',
   serviceAccount: 'jenkins2', containers: [
   containerTemplate(
-      name: 'jnlp',
-      image: 'cnych/jenkins:jnlp',
-      args: '${computer.jnlpmac} ${computer.name}',
+      name: 'xyjnlp',
+      image: 'zhaoxy8/jenkins-slave-docker:3.5.3',
+      command: 'cat',
       ttyEnabled: true,
       privileged: false,
       alwaysPullImage: false)
   ],
+  volumes: [ 
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+    hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube')
+]	
 ){
-node('xy1219.zhao-jnlp') {
+node('jenkins-jnlp') {
     stage('Prepare') {
-    	container('jnlp') {
+      container('xyjnlp') {
         echo "1.Prepare Stage"
         checkout scm
         script {
@@ -21,21 +25,25 @@ node('xy1219.zhao-jnlp') {
                 build_tag = "${env.BRANCH_NAME}-${build_tag}"
             }
         }
-      }  
+      }
     }
     stage('Test') {
       echo "2.Test Stage"
     }
     stage('Build') {
+        container('xyjnlp') {
         echo "3.Build Docker Image Stage"
         sh "docker build -t zhaoxy8/jenkins-slave-docker:${build_tag} ."
+       }
     }
     stage('Push') {
+       container('xyjnlp') {
         echo "4.Push Docker Image Stage"
         withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
             sh "docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
             sh "docker push zhaoxy8/jenkins-slave-docker:${build_tag}"
         }
+       }
     }
     stage('Deploy') {
         echo "5. Deploy Stage"
