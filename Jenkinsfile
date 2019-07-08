@@ -12,7 +12,6 @@ podTemplate(name: 'jenkins-jnlp', cloud: 'kubernetes',
   ],
   volumes: [ 
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), 
-    hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube'),
   ]
 ){
 node('jenkins-jnlp') {
