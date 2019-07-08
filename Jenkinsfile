@@ -9,6 +9,10 @@ podTemplate(name: 'xy.zhao-jnlp', cloud: 'kubernetes',
       privileged: false,
       alwaysPullImage: false)
   ],
+  volumes: [ 
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), 
+    hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube'),
+  ]
 ){
 node('xy.zhao-jnlp') {
     stage('Prepare') {
