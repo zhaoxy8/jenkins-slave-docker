@@ -3,7 +3,7 @@ podTemplate(name: 'jenkins-jnlp', cloud: 'kubernetes',
   serviceAccount: 'jenkins2', containers: [
   containerTemplate(
       name: 'xyjnlp',
-      image: 'cnych/jenkins:jnlp',
+      image: 'zhaoxy8/jenkins-slave-docker:dev-ed14a9a',
       workspace: '/home/jenkins',
       //args: '${computer.jnlpmac} ${computer.name}',
       ttyEnabled: true,
@@ -17,7 +17,7 @@ podTemplate(name: 'jenkins-jnlp', cloud: 'kubernetes',
 ){
 node('jenkins-jnlp') {
     stage('Prepare') {
-    	
+    	container('xyjnlp') {
         echo "1.Prepare Stage"
 	sleep 300
         checkout scm
@@ -27,7 +27,7 @@ node('jenkins-jnlp') {
                 build_tag = "${env.BRANCH_NAME}-${build_tag}"
             }
         }
-      
+      }
     }
     stage('Test') {
       echo "2.Test Stage"
