@@ -17,7 +17,6 @@ podTemplate(name: 'jenkins-jnlp', cloud: 'kubernetes',
 ){
 node('jenkins-jnlp') {
     stage('Prepare') {
-    	container('xyjnlp') {
         echo "1.Prepare Stage"
         checkout scm
 	sleep 300
@@ -27,7 +26,6 @@ node('jenkins-jnlp') {
                 build_tag = "${env.BRANCH_NAME}-${build_tag}"
             }
         }
-      }
     }
     stage('Test') {
       echo "2.Test Stage"
