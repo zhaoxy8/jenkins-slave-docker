@@ -24,6 +24,11 @@ RUN apk add npm
 # Install yarn
 RUN apk add yarn
 
+# Install newman
+RUN npm install -g newman
+
+# Install jq
+RUN apk add jq
 
 # Set timezone to UTC by default
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
