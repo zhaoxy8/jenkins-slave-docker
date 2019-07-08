@@ -19,8 +19,8 @@ node('jenkins-jnlp') {
     stage('Prepare') {
     	container('xyjnlp') {
         echo "1.Prepare Stage"
-	sleep 300
         checkout scm
+	sleep 300
         script {
             build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
             if (env.BRANCH_NAME != 'master') {
