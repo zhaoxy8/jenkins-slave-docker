@@ -1,8 +1,8 @@
-podTemplate(name: 'xy1219.zhao-jnlp', cloud: 'kubernetes',
-  namespace: 'kube-ops', label: 'xy1219.zhao-jnlp',
+podTemplate(name: 'xy.zhao-jnlp', cloud: 'kubernetes',
+  namespace: 'kube-ops', label: 'xy.zhao-jnlp',
   serviceAccount: 'jenkins2', containers: [
   containerTemplate(
-      name: 'jnlp',
+      name: 'xyjnlp',
       image: 'cnych/jenkins:jnlp',
       args: '${computer.jnlpmac} ${computer.name}',
       ttyEnabled: true,
@@ -10,9 +10,9 @@ podTemplate(name: 'xy1219.zhao-jnlp', cloud: 'kubernetes',
       alwaysPullImage: false)
   ],
 ){
-node('xy1219.zhao-jnlp') {
+node('xy.zhao-jnlp') {
     stage('Prepare') {
-    	container('jnlp') {
+    	container('xyjnlp') {
         echo "1.Prepare Stage"
         checkout scm //Get git repo all files
         script {
