@@ -19,7 +19,7 @@ node('jenkins-jnlp') {
     stage('Prepare') {
     	container('xyjnlp') {
         echo "1.Prepare Stage"
-        // checkout scm //Get git repo all files
+        checkout scm
         script {
             build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
             if (env.BRANCH_NAME != 'master') {
