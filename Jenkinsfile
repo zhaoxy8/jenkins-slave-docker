@@ -1,18 +1,16 @@
-podTemplate(name: 'jenkins-jnlp', cloud: 'kubernetes',
+podTemplate(name: 'slave-jnlp', cloud: 'kubernetes',
   namespace: 'kube-ops', label: 'jenkins-jnlp',
   serviceAccount: 'jenkins2', containers: [
   containerTemplate(
       name: 'xyjnlp',
       image: 'zhaoxy8/jenkins-slave-docker:dev-ed14a9a',
-      workspace: '/home/jenkins',
-      //args: '${computer.jnlpmac} ${computer.name}',
+      args: '${computer.jnlpmac} ${computer.name}',
       ttyEnabled: true,
       privileged: false,
       alwaysPullImage: false)
   ],
   volumes: [ 
-    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), 
-    hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube')
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
   ]
 ){
 node('jenkins-jnlp') {
