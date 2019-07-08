@@ -3,6 +3,7 @@ MAINTAINER xy1219.zhao <zhaoxingyuanyuan@gmail.com>
 USER root
 RUN apk add --no-cache curl tar bash
 ENV DOCKER_VERSION=17.04.0-ce  DOCKER_COMPOSE_VERSION=1.21.2
+
 RUN apk update
 # Install base and dev packages
 RUN apk add --no-cache --virtual .build-deps
