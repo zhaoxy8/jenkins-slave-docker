@@ -1,4 +1,4 @@
-podTemplate(name: 'haimaxy-jnlp', cloud: 'kubernetes',
+podTemplate(name: 'xy1219.zhao-jnlp', cloud: 'kubernetes',
   namespace: 'kube-ops', label: 'haimaxy-jnlp',
   serviceAccount: 'jenkins2', containers: [
   containerTemplate(
@@ -10,7 +10,7 @@ podTemplate(name: 'haimaxy-jnlp', cloud: 'kubernetes',
       alwaysPullImage: false)
   ],
 ){
-node('haimaxy-jnlp') {
+node('xy1219.zhao-jnlp') {
     stage('Prepare') {
     	container('jnlp') {
         echo "1.Prepare Stage"
