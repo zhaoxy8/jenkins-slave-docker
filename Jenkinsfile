@@ -12,11 +12,12 @@ podTemplate(name: 'jenkins-jnlp', cloud: 'kubernetes',
   ],
   volumes: [ 
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), 
+    hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube')
   ]
 ){
 node('jenkins-jnlp') {
     stage('Prepare') {
-    	container('xyjnlp') {
+    	
         echo "1.Prepare Stage"
         checkout scm
         script {
@@ -25,7 +26,7 @@ node('jenkins-jnlp') {
                 build_tag = "${env.BRANCH_NAME}-${build_tag}"
             }
         }
-      }  
+      
     }
     stage('Test') {
       echo "2.Test Stage"
