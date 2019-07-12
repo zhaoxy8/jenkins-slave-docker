@@ -37,7 +37,7 @@ RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN apk add docker
 
 # Install openrc
-apk add openrc --no-cache
+RUN apk add openrc --no-cache
 
 #######
 # Maven
