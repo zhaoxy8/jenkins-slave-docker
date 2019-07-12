@@ -33,6 +33,12 @@ RUN apk add jq
 # Set timezone to UTC by default
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 
+# Install docker
+RUN apk add docker
+
+# Install openrc
+apk add openrc --no-cache
+
 #######
 # Maven
 #######
@@ -63,6 +69,11 @@ RUN unset MAVEN_VERSION
 RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz \
 		&& tar --strip-components=1 -xvzf docker-${DOCKER_VERSION}.tgz -C /usr/local/bin \
 		&& chmod -R +x /usr/local/bin/docker
+
+#######
+# service start docker
+#######
+RUN rc-update add docker boot && service docker start
 
 #######
 # docker-compose

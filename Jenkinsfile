@@ -47,6 +47,9 @@ node('jenkins-jnlp') {
     }
     stage('Deploy') {
         echo "5. Deploy Stage"
+        container('xyjnlp') {
+	    sh "docker rmi zhaoxy8/jenkins-slave-docker:${build_tag}"
+        }
         if (env.BRANCH_NAME == 'master') {
             input "确认要部署线上环境吗？"
         }
