@@ -73,7 +73,7 @@ RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSI
 #######
 # service start docker
 #######
-RUN rc-update add docker boot && service docker start
+#RUN rc-update add docker boot && service docker start
 
 #######
 # docker-compose
